@@ -7,9 +7,10 @@ import java.util.List;
 public class Example {
 
   public static Matrix<PairWithOperators> multiplyPairMatrices(
-        List<Matrix<PairWithOperators>> matrices) {
-    // TODO: implement as part of Question 4
-    return null;
+      List<Matrix<PairWithOperators>> matrices) {
+    return matrices.stream()
+        .reduce((x, y) -> x.product(y, PairWithOperators::sum, PairWithOperators::product))
+        .orElse(null);
   }
 
 }
