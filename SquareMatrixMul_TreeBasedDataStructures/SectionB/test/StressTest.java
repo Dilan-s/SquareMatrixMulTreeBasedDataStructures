@@ -19,7 +19,7 @@ public class StressTest {
 
   private static final int NUM_TEST_STRINGS = 100000;
   private static final int MAX_STRING_LENGTH = 10;
-  private static final int NUM_THREADS = 8;
+  private static final int NUM_THREADS = 9;
 
   private static final ArrayList<String> manyValidStrings =
       generateRandomStrings(NUM_TEST_STRINGS, MAX_STRING_LENGTH);
