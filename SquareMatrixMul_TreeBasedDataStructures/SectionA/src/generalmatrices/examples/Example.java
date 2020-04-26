@@ -3,6 +3,7 @@ package generalmatrices.examples;
 import generalmatrices.matrix.Matrix;
 import generalmatrices.pair.PairWithOperators;
 import java.util.List;
+import java.util.Optional;
 
 public class Example {
 

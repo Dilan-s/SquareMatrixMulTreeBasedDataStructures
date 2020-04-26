@@ -7,17 +7,18 @@ import java.util.function.BinaryOperator;
 public class Matrix<T> {
 
   private final T[][] matrix;
-  private final int n;
+  private final int order;
 
-  public Matrix(List<T> matrixEntires) throws IllegalArgumentException {
-    if (matrixEntires.isEmpty()) {
+  public Matrix(List<T> entrySet) throws IllegalArgumentException {
+    if (entrySet.isEmpty()) {
       throw new IllegalArgumentException();
     }
-    this.n = (int) Math.sqrt(matrixEntires.size());
-    matrix = (T[][]) new Object[n][n];
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < n; j++) {
-        matrix[i][j] = matrixEntires.get(i * n + j);
+    Double n = Math.sqrt(entrySet.size());
+    order = n.intValue();
+    matrix = (T[][]) new Object[order][order];
+    for (int i = 0; i < order; i++) {
+      for (int j = 0; j < order; j++) {
+        matrix[i][j] = entrySet.get(i * order + j);
       }
     }
   }
@@ -27,58 +28,55 @@ public class Matrix<T> {
   }
 
   public int getOrder() {
-    return n;
+    return order;
   }
 
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder();
-    sb.append('[');
-    for (int i = 0; i < n; i++) {
-      sb.append('[');
-      for (int j = 0; j < n; j++) {
-        sb.append(matrix[i][j]);
-        if (j != n - 1) {
-          sb.append(' ');
+    sb.append("[");
+    boolean first = true;
+    for (int i = 0; i < order; i++) {
+      sb.append("[");
+      for (int j = 0; j < order; j++) {
+        if (first) {
+          first = false;
         } else {
-          sb.append(']');
+          sb.append(" ");
         }
+        sb.append(matrix[i][j]);
       }
-      if (i == n - 1) {
-        sb.append(']');
-      }
+      sb.append("]");
+      first = true;
     }
+    sb.append("]");
     return sb.toString();
   }
 
   public Matrix<T> sum(Matrix<T> other, BinaryOperator<T> elementSum) {
-    ArrayList<T> res = new ArrayList<>();
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < n; j++) {
-        res.add(elementSum.apply(this.get(i, j), other.get(i, j)));
+    List<T> newMatrix = new ArrayList<>();
+    for (int i = 0; i < order; i++) {
+      for (int j = 0; j < order; j++) {
+        newMatrix.add(elementSum.apply(get(i, j), other.get(i, j)));
       }
     }
-    return new Matrix<>(res);
+    return new Matrix<>(newMatrix);
   }
 
   public Matrix<T> product(Matrix<T> other, BinaryOperator<T> elementSum,
       BinaryOperator<T> elementProduct) {
-    ArrayList<T> res = new ArrayList<>();
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < n; j++) {
-        T runningRes = null;
-        for (int k = 0; k < n; k++) {
-          T elem = elementProduct.apply(this.get(i, k), other.get(k, j));
-          if (k == 0) {
-            runningRes = elem;
-          } else {
-            runningRes = elementSum.apply(runningRes, elem);
+    List<T> newMatrix = new ArrayList<>();
+    for (int i = 0; i < order; i++) {
+      for (int j = 0; j < order; j++) {
+        T newVal = elementProduct.apply(get(i, 0), other.get(0, j));
+        for (int k = 0; k < order; k++) {
+          if (k != 0){
+            newVal = elementSum.apply(newVal, elementProduct.apply(get(i, k), other.get(k, j)));
           }
         }
-        res.add(runningRes);
+        newMatrix.add(newVal);
       }
     }
-    return new Matrix<>(res);
+    return new Matrix<>(newMatrix);
   }
-
 }

@@ -1,6 +1,8 @@
 import static org.junit.Assert.assertEquals;
 
+import collections.CoarseGrained.CoarseGrainedSimpleCompactWordTree;
 import collections.CompactWordsSet;
+import collections.FineGrained.FineGrainedSimpleCompactWordTree;
 import collections.SimpleCompactWordTree;
 import collections.exceptions.InvalidWordException;
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class StressTest {
   @Test
   public void stressTestWithManyOperations() {
     // This test *may* help spotting race conditions
-    final CompactWordsSet wordsSet = new SimpleCompactWordTree();
+    final CompactWordsSet wordsSet = new FineGrainedSimpleCompactWordTree();
     final Thread[] threads = new Thread[NUM_THREADS];
 
     final long startTime = System.currentTimeMillis();
